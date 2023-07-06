@@ -1,3 +1,4 @@
+use std::convert::TryInto;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::marker::PhantomData;
@@ -40,6 +41,16 @@ where
     pub fn save(&self, store: &mut dyn Storage, data: &T) -> StdResult<()> {
         store.set(self.storage_key, &to_vec(data)?);
         Ok(())
+    }
+
+    pub fn save_u64(&self, store: &mut dyn Storage, data: u64) -> StdResult<()> {
+        store.set(self.storage_key, &data.to_be_bytes());
+        Ok(())
+    }
+
+    pub fn load_u64(&self, store: &dyn Storage) -> u64 {
+        let value = store.get(self.storage_key).unwrap();
+       u64::from_be_bytes(value.as_slice().try_into().unwrap())
     }
 
     pub fn remove(&self, store: &mut dyn Storage) {
