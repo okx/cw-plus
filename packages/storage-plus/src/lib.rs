@@ -15,6 +15,7 @@ mod map;
 mod path;
 mod prefix;
 mod snapshot;
+mod scf;
 
 #[cfg(feature = "iterator")]
 pub use bound::{Bound, Bounder, PrefixBound, RawBound};
